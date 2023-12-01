@@ -55,8 +55,8 @@ function stopDrawing() {
 	drawing = false;
 	ctx.beginPath();
 }
- // Sample SHA-256 hashing function (you may want to use a proper library)
- function sha256(input) {
+// Sample SHA-256 hashing function (you may want to use a proper library)
+function sha256(input) {
 	const buffer = new TextEncoder('utf-8').encode(input);
 	const hashArray = crypto.subtle.digest('SHA-256', buffer).then(hashBuffer => {
 		const hashArray = Array.from(new Uint8Array(hashBuffer));
@@ -64,7 +64,7 @@ function stopDrawing() {
 	});
 
 	return hashArray; // Return the Promise directly
-} 
+}
 
 async function saveSignature(dataUrl, filename) {
 	// const dataUrl = canvas.toDataURL();
@@ -74,7 +74,7 @@ async function saveSignature(dataUrl, filename) {
 	const signatureImage = document.createElement('a');
 	signatureImage.href = dataUrl;
 	signatureImage.download = filename + '.png'; // You can change the filename as needed
-	signatureImage.click(); 
+	signatureImage.click();
 	//return hash;
 }
 
@@ -189,15 +189,15 @@ var KTModalCustomersAdd = function () {
 					console.log('validated!');
 
 					if (status == 'Valid') {
-						
+
 						function generateCurrentDate() {
 							const currentDate = new Date();
 							const options = { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true };
 							const formattedDate = currentDate.toLocaleString('en-US', options);
-						
+
 							return formattedDate;
 						}
-						
+
 						let bioForm = document.getElementById("kt_modal_add_customer_form");
 						let inputs = bioForm.querySelectorAll('input');
 						const inputValues = {};
@@ -205,81 +205,37 @@ var KTModalCustomersAdd = function () {
 							const name = input.name;
 							const value = input.value;
 							inputValues[name] = value;
-						}); 
-						inputValues.userId = Date.now(); 
+						});
+						inputValues.userId = Date.now();
 						const regDate = generateCurrentDate();
-						inputValues.regDate = regDate; 
+						inputValues.regDate = regDate;
 						inputValues.gender = bioForm.querySelector('[name="gender"]').value;
 						inputValues.marital_status = bioForm.querySelector('[name="marital_status"]').value;
 						inputValues.programme = bioForm.querySelector('[name="programme"]').value;
 						inputValues.programme_type = bioForm.querySelector('[name="programme_type"]').value;
 
-
 						var avatarFile = document.getElementById("avatar");
 						const avatar = avatarFile.files[0];
 						if (avatar) {
 							const reader = new FileReader();
-							reader.onload = function (e) {  
-								inputValues.avatarId = e.target.result; 
+							reader.onload = function (e) {
+								inputValues.avatarId = e.target.result;
 								ContinueSaving();
 							};
 							reader.readAsDataURL(avatar);
-						} else ContinueSaving();
-						
-					 	async function ContinueSaving(){
-						//console.log(JSON.stringify(inputValues)); return;
+						} else ContinueSaving(); 
 
-						// var signatureInput = document.getElementById("signature");
-						// const signature = signatureInput.files[0];
-						// if (signature) {
-						// 	const reader = new FileReader();
-						// 	reader.onload = function (e) {
-								//const signatureData = e.target.result;
-								const dataUrl = canvas.toDataURL();
-								const hash = await sha256(dataUrl);
-								const signatureId = hash; //generateSignatureId(signatureData);
-								saveSignature(dataUrl, bioForm.querySelector('[name="description"]').value); 
-								inputValues.signatureId = signatureId;
-								// Assuming inputValues is defined and contains the data you want to store
-								let userMraw = JSON.stringify(inputValues);
-								console.log(userMraw); let bioList = [];
-								let bioListMraw = localStorage.getItem("bioListMraw");
-								if (bioListMraw) bioList = JSON.parse(bioListMraw); 
-								bioList.push({ signatureId: signatureId, data: userMraw }); 
-								localStorage.setItem("bioListMraw", JSON.stringify(bioList));
-						// 	};
-						// 	reader.readAsDataURL(signature);
-						// } else {
-						// 	alert('Please select a signature file.');
-						// 	return;
-						// }
-
-						submitButton.setAttribute('data-kt-indicator', 'on');
-						// Disable submit button whilst loading
-						submitButton.disabled = true;
-						setTimeout(function () {
-							submitButton.removeAttribute('data-kt-indicator');
-							Swal.fire({
-								text: "Signature for the record has been downloaded successfully and the Form has been successfully submitted!",
-								icon: "success", buttonsStyling: false,
-								confirmButtonText: "Ok, got it!",
-								customClass: {
-									confirmButton: "btn btn-primary"
-								}
-							}).then(function (result) {
-								if (result.isConfirmed) {
-									// Hide modal
-									modal.hide();
-									// Redirect to customers list page
-									window.location = form.getAttribute("data-kt-redirect");
-								}
-							});
-							// Enable submit button after loading
-							submitButton.disabled = false;
-						}, 2000);
+						async function ContinueSaving() {
+							const dataUrl = canvas.toDataURL();
+							const hash = await sha256(dataUrl);
+							const signatureId = hash; //generateSignatureId(signatureData);
+							saveSignature(dataUrl, bioForm.querySelector('[name="description"]').value);
+							inputValues.signatureId = signatureId;
+							submitButton.setAttribute('data-kt-indicator', 'on');
+							submitButton.disabled = true;
+							firestorePostBioData(inputValues); 
 						}
-
-					} 
+					}
 					else {
 						Swal.fire({
 							text: "Sorry, looks like there are some errors detected, please try again.",
@@ -294,6 +250,52 @@ var KTModalCustomersAdd = function () {
 				});
 			}
 		});
+
+		function firestorePostBioData(postData) {
+			const db = firebase.firestore();
+			const regCollectionRef = db.collection('projectHND23/cshndf213125/bioDataRecords').doc(postData.signatureId);
+			// Use a batch to write the data to both the 'posts' collection and the user's post list
+			const batch = db.batch();
+			batch.set(regCollectionRef, postData);
+			// Commit the batch
+			batch.commit().then(() => {
+				// Show message popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
+				submitButton.removeAttribute('data-kt-indicator');
+				Swal.fire({
+					text: "Signature for the record has been downloaded successfully and the Form has been successfully submitted!",
+					icon: "success", buttonsStyling: false,
+					confirmButtonText: "Ok, got it!",
+					customClass: {
+						confirmButton: "btn btn-primary"
+					}
+				}).then(function (result) {
+					if (result.isConfirmed) {
+						// Hide modal
+						modal.hide();
+						// Redirect to customers list page
+						window.location = form.getAttribute("data-kt-redirect");
+					}
+				});
+				// Enable submit button after loading
+				submitButton.disabled = false;
+			}).catch((error) => {
+				// The write failed...
+				console.error(error);
+				// Show error popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
+				Swal.fire({
+					text: "Sorry, There are errors saving the record, please try again.",
+					icon: "error",
+					buttonsStyling: false,
+					confirmButtonText: "Ok, got it!",
+					customClass: {
+						confirmButton: "btn btn-primary"
+					}
+				});
+				// Hide loading indication
+				submitButton.removeAttribute('data-kt-indicator');
+				submitButton.disabled = false;
+			});
+		}
 
 		cancelButton.addEventListener('click', function (e) {
 			e.preventDefault();

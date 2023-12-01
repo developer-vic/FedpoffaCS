@@ -1,5 +1,19 @@
 "use strict";
 
+const firebaseConfig = {
+    apiKey: "AIzaSyDQplDuiwgoOLJV8LEqHc9ZYi5KbfMmc9g",
+    authDomain: "fedpoffacs.firebaseapp.com",
+    projectId: "fedpoffacs",
+    storageBucket: "fedpoffacs.appspot.com",
+    messagingSenderId: "572139824346",
+    appId: "1:572139824346:web:eb24dd16ac0cea086db1e3",
+    measurementId: "G-XEM4TRP48W"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+let bioList = [];
+
 function generateSignatureId(signatureData) {
     return btoa(signatureData);
 }
@@ -49,47 +63,9 @@ var KTCustomersList = function () {
             handleDeleteRows();
             toggleToolbars();
         });
-
+ 
         // Example data 
-        let bioListMraw = localStorage.getItem("bioListMraw");
-        let bioList = [];
-        if (bioListMraw) {
-            bioList = JSON.parse(bioListMraw);
-            bioList.forEach(bio => {
-                let rowData = JSON.parse(bio.data);
-                // Clone the template
-                let templateRow = document.getElementById('templateRow');
-                let newRow = templateRow.cloneNode(true);
-                newRow.innerHTML = newRow.innerHTML.replace(/\[(.*?)\]/g, (_, key) => rowData[key]);
-                //let signatureId = rowData.signatureId;
-                // updateSignatureImage(newRow, signatureId);
-                document.getElementById('yourTableBodyId').appendChild(newRow);
-                newRow.style.display = '';
-            });
-        }
-
-        async function compareSignature(event) {
-            const input = event.target;
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-
-                reader.onload = async function (e) {
-                    const uploadedImage = e.target.result;
-                    const uploadedImageHash = await sha256(uploadedImage);
-                     
-                    const savedSignatureHash = localStorage.getItem('signatureHash');
-
-                    if (uploadedImageHash === savedSignatureHash) {
-                        showResult('Signatures match!');
-                    } else {
-                        showResult('Signatures do not match.');
-                    }
-                };
-
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
+        GetBioDataList();
         // Action buttons
         submitSignatureButton.addEventListener('click', function (e) {
             e.preventDefault();
@@ -101,33 +77,34 @@ var KTCustomersList = function () {
                 submitSignatureButton.setAttribute('data-kt-indicator', 'on');
                 submitSignatureButton.disabled = true;
                 setTimeout(() => {
-                //validating file
-                const reader = new FileReader();
-                reader.onload = async function (e) {
-                    const signatureData = e.target.result;
-                    const signatureId = await sha256(signatureData); // generateSignatureId(signatureData);
-                    let userDetail = bioList.find(item => item.signatureId === signatureId);
-                    if (userDetail && JSON.parse(userDetail.data).userId==vUserId) {
-                        localStorage.setItem("viewDetails", userDetail.data);
-                        location.href = "view.html";
-                    }
-                    else {
-                        Swal.fire({
-                            text: "The signature you uploaded does not match the signature used to save the bio data, please try again.",
-                            icon: "error",
-                            buttonsStyling: false,
-                            confirmButtonText: "Ok, got it!",
-                            customClass: {
-                                confirmButton: "btn btn-primary"
-                            }
-                        });
-                        // Enable submit button after loading
-                        submitSignatureButton.setAttribute('data-kt-indicator', 'off');
-                        submitSignatureButton.disabled = false;
-                    }
-                };
-                reader.readAsDataURL(signature); 
-            }, 2000);
+                    //validating file
+                    const reader = new FileReader();
+                    reader.onload = async function (e) {
+                        const signatureData = e.target.result;
+                        const signatureId = await sha256(signatureData); // generateSignatureId(signatureData);
+                        let userDetail = bioList.find(item => item.userId === vUserId 
+                                                    && item.signatureId === signatureId);
+                        if (userDetail) {
+                            sessionStorage.setItem("viewDetails", JSON.stringify(userDetail));
+                            location.href = "view.html";
+                        }
+                        else {
+                            Swal.fire({
+                                text: "The signature you uploaded does not match the signature used to save the bio data, please try again.",
+                                icon: "error",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, got it!",
+                                customClass: {
+                                    confirmButton: "btn btn-primary"
+                                }
+                            });
+                            // Enable submit button after loading
+                            submitSignatureButton.setAttribute('data-kt-indicator', 'off');
+                            submitSignatureButton.disabled = false;
+                        }
+                    };
+                    reader.readAsDataURL(signature);
+                }, 2000);
             }
             else {
                 Swal.fire({
@@ -142,6 +119,30 @@ var KTCustomersList = function () {
             }
         });
     }
+
+    async function GetBioDataList() { 
+        const db = firebase.firestore();
+        const bioDataCollectionRef = db.collection('projectHND23/cshndf213125/bioDataRecords');
+        bioDataCollectionRef.get()
+            .then(querySnapshot => {
+                bioList = [];
+                querySnapshot.forEach(doc => { 
+                    let rowData = doc.data(); // JSON.parse(bio.data);
+                    bioList.push(rowData);
+                    // Clone the template
+                    let templateRow = document.getElementById('templateRow');
+                    let newRow = templateRow.cloneNode(true);
+                    newRow.innerHTML = newRow.innerHTML.replace(/\[(.*?)\]/g, (_, key) => rowData[key]);
+                    //let signatureId = rowData.signatureId;
+                    // updateSignatureImage(newRow, signatureId);
+                    document.getElementById('yourTableBodyId').appendChild(newRow);
+                    newRow.style.display = '';
+                }
+                );
+            })
+            .catch(err => console.log(err));
+    }
+
 
     // Search Datatable --- official docs reference: https://datatables.net/reference/api/search()
     var handleSearchDatatable = () => {

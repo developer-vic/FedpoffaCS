@@ -1,18 +1,27 @@
 "use strict";
 
-let _userId = "";
+const firebaseConfig = {
+    apiKey: "AIzaSyDQplDuiwgoOLJV8LEqHc9ZYi5KbfMmc9g",
+    authDomain: "fedpoffacs.firebaseapp.com",
+    projectId: "fedpoffacs",
+    storageBucket: "fedpoffacs.appspot.com",
+    messagingSenderId: "572139824346",
+    appId: "1:572139824346:web:eb24dd16ac0cea086db1e3",
+    measurementId: "G-XEM4TRP48W"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
 
- // Sample SHA-256 hashing function (you may want to use a proper library)
- function sha256(input) {
-	const buffer = new TextEncoder('utf-8').encode(input);
-	const hashArray = crypto.subtle.digest('SHA-256', buffer).then(hashBuffer => {
-		const hashArray = Array.from(new Uint8Array(hashBuffer));
-		return hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
-	});
+// Sample SHA-256 hashing function (you may want to use a proper library)
+function sha256(input) {
+    const buffer = new TextEncoder('utf-8').encode(input);
+    const hashArray = crypto.subtle.digest('SHA-256', buffer).then(hashBuffer => {
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        return hashArray.map(byte => byte.toString(16).padStart(2, '0')).join('');
+    });
 
-	return hashArray; // Return the Promise directly
-} 
-
+    return hashArray; // Return the Promise directly
+}
 
 function DeleteRecord() {
     Swal.fire({
@@ -26,26 +35,17 @@ function DeleteRecord() {
             confirmButton: "btn btn-primary",
             cancelButton: "btn btn-active-light"
         }
-    }).then(function (result) {
+    }).then(async function (result) {
         if (result.value) {
             //delete, timer 2 s
             document.body.style.cursor = 'wait';
-
-            // Retrieve existing bioList array from localStorage
-            let bioListMraw = localStorage.getItem("bioListMraw");
-            let bioList = bioListMraw ? JSON.parse(bioListMraw) : [];
-            // Efind the actual values index
-            let indexToUpdate = bioList.findIndex(item => item.userId === _userId);
-            // Check if the object with the old signatureId exists
-            if (indexToUpdate !== -1) {
-                // remove the object from index
-                bioList.splice(indexToUpdate, 1);
-                // Save the updated bioList array back to localStorage
-                localStorage.setItem("bioListMraw", JSON.stringify(bioList));
-                localStorage.removeItem("viewDetails");
-            }
-
-            setTimeout(() => {
+            try {
+                const db = firebase.firestore(); let keyToDelete = _vuser.signatureId;
+                const bioDataCollectionRef = db.collection('projectHND23/cshndf213125/bioDataRecords').doc(keyToDelete);
+                const batch = db.batch();
+                batch.delete(bioDataCollectionRef);
+                await batch.commit();
+                sessionStorage.removeItem("viewDetails");
                 Swal.fire({
                     text: "Your record has deleted successfully!.",
                     icon: "success",
@@ -57,8 +57,10 @@ function DeleteRecord() {
                 }).then(function (result) {
                     location.href = "list.html";
                 });
-                document.body.style.cursor = 'auto';
-            }, 2000);
+            } catch (error) {
+                console.error("Error deleting key:", error);
+            }
+            document.body.style.cursor = 'auto';
         }
     });
 }
@@ -102,76 +104,70 @@ var KTModalUpdateCustomer = function () {
             const avatar = avatarFile.files[0];
             if (avatar) {
                 const reader = new FileReader();
-                reader.onload = function (e) {  
-                    inputValues.avatarId = e.target.result; 
+                reader.onload = function (e) {
+                    inputValues.avatarId = e.target.result;
                     ContinueSaving();
                 };
                 reader.readAsDataURL(avatar);
-            } else{
-                inputValues.avatarId = _vuser.avatarId; 
-                ContinueSaving();
-            } 
-
-            async function ContinueSaving(){
-                //console.log(JSON.stringify(inputValues)); return;
-            var signatureInput = document.getElementById("signature");
-            const signature = signatureInput.files[0];
-            if (signature) {
-                const reader = new FileReader();
-                reader.onload = async function (e) {
-                    const signatureData = e.target.result;
-                    const signatureId = await sha256(signatureData); //generateSignatureId(signatureData);
-                    inputValues.signatureId = signatureId;
-                    // Assuming inputValues is defined and contains the data you want to store
-                    let userMraw = JSON.stringify(inputValues);
-                    //console.log(userMraw);
-                    // Retrieve existing bioList array from localStorage
-                    let bioListMraw = localStorage.getItem("bioListMraw");
-                    let bioList = bioListMraw ? JSON.parse(bioListMraw) : [];
-                    // Example: Replace 'oldSignatureId' and 'newSignatureId' with actual values
-                    let oldSignatureId = _vuser.signatureId; let newSignatureId = signatureId;
-                    let indexToUpdate = bioList.findIndex(item => item.signatureId === oldSignatureId);
-                    // Check if the object with the old signatureId exists
-                    if (indexToUpdate !== -1) {
-                        // Update the object with the new signatureId
-                        bioList[indexToUpdate].signatureId = newSignatureId;
-                        bioList[indexToUpdate].data = userMraw;
-                        // Save the updated bioList array back to localStorage
-                        localStorage.setItem("bioListMraw", JSON.stringify(bioList));
-                        localStorage.setItem("viewDetails", userMraw);
-                    }
-                    else {
-                        Swal.fire({
-                            text: "sorry, Signature do not match.",
-                            icon: "error",
-                            buttonsStyling: false,
-                            confirmButtonText: "Ok, got it!",
-                            customClass: {
-                                confirmButton: "btn btn-primary"
-                            }
-                        });
-                        return;
-                    }
-                };
-                reader.readAsDataURL(signature);
             } else {
-                Swal.fire({
-                    text: "Please select a signature file.",
-                    icon: "error",
-                    buttonsStyling: false,
-                    confirmButtonText: "Ok, got it!",
-                    customClass: {
-                        confirmButton: "btn btn-primary"
-                    }
-                });
-                return;
+                inputValues.avatarId = _vuser.avatarId;
+                ContinueSaving();
             }
 
-            submitButton.setAttribute('data-kt-indicator', 'on');
-            // Disable submit button whilst loading
-            submitButton.disabled = true;
-            setTimeout(function () {
-                submitButton.removeAttribute('data-kt-indicator');
+            async function ContinueSaving() {
+                //console.log(JSON.stringify(inputValues)); return;
+                var signatureInput = document.getElementById("signature");
+                const signature = signatureInput.files[0];
+                if (signature) {
+                    const reader = new FileReader();
+                    reader.onload = async function (e) {
+                        const signatureData = e.target.result;
+                        const signatureId = await sha256(signatureData); //generateSignatureId(signatureData);
+                        inputValues.signatureId = signatureId; 
+                        // Check if the object with the old signatureId exists
+                        if (_vuser.signatureId === signatureId) {  
+                            submitButton.setAttribute('data-kt-indicator', 'on');
+                            submitButton.disabled = true; 
+                            firestoreUpdateBioData(inputValues);  
+                        }
+                        else {
+                            Swal.fire({
+                                text: "sorry, Signature do not match.",
+                                icon: "error",
+                                buttonsStyling: false,
+                                confirmButtonText: "Ok, got it!",
+                                customClass: {
+                                    confirmButton: "btn btn-primary"
+                                }
+                            }); 
+                        }
+                    };
+                    reader.readAsDataURL(signature);
+                } else {
+                    Swal.fire({
+                        text: "Please select a signature file.",
+                        icon: "error",
+                        buttonsStyling: false,
+                        confirmButtonText: "Ok, got it!",
+                        customClass: {
+                            confirmButton: "btn btn-primary"
+                        }
+                    }); 
+                } 
+            } 
+        });
+ 
+		function firestoreUpdateBioData(postData) {
+			const db = firebase.firestore();
+			const regCollectionRef = db.collection('projectHND23/cshndf213125/bioDataRecords').doc(postData.signatureId);
+			// Use a batch to write the data to both the 'posts' collection and the user's post list
+			const batch = db.batch();
+			batch.set(regCollectionRef, postData);
+			// Commit the batch
+			batch.commit().then(() => {
+                sessionStorage.setItem("viewDetails", JSON.stringify(postData));
+				// Show message popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
+				submitButton.removeAttribute('data-kt-indicator');
                 Swal.fire({
                     text: "Form has been successfully updated!",
                     icon: "success",
@@ -188,12 +184,27 @@ var KTModalUpdateCustomer = function () {
                         location.reload();
                     }
                 });
-                // Enable submit button after loading
-                submitButton.disabled = false;
-            }, 2000);
-            }
+				// Enable submit button after loading
+				submitButton.disabled = false;
+			}).catch((error) => {
+				// The write failed...
+				console.error(error);
+				// Show error popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
+				Swal.fire({
+					text: "Sorry, There are errors saving the record, please try again.",
+					icon: "error",
+					buttonsStyling: false,
+					confirmButtonText: "Ok, got it!",
+					customClass: {
+						confirmButton: "btn btn-primary"
+					}
+				});
+				// Hide loading indication
+				submitButton.removeAttribute('data-kt-indicator');
+				submitButton.disabled = false;
+			});
+		}
 
-        });
 
         cancelButton.addEventListener('click', function (e) {
             e.preventDefault();
