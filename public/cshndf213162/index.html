@@ -81,7 +81,7 @@
             <div class="container">
                 <div class="gx-page-title gx-page-title-2 m-t-30">
                     <div class="gx-breadcrumb">
-                        <h5>By: CS/ND/F21/3126</h5>
+                        <h5>By: CS/HND/F21/3162</h5>
                         <ul>
                             <li><a href="ocr.html">Home</a></li>
                             <li>O.C.R</li>
@@ -315,34 +315,48 @@
     <!-- Main Custom -->
     <script src="assets/js/main.js"></script>
     <script src="assets/js/vendor/ocr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-firestore.js"></script>
 
     <script>
+        function showLoading() {
+            Swal.fire({
+                title: '', text: 'Processing....',
+                imageUrl: 'assets/img/loading.gif',
+                showConfirmButton: false,
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                onOpen: () => {
+                    Swal.showLoading();
+                }
+            })
+        }
+        
         var canvas = new fabric.Canvas('drawCanvas', { isDrawingMode: true });
-
         function performOCR(form) {
             // Your OCR logic for image upload...
             const input = document.getElementById('imageInput');
             const resultContainer = document.getElementById('result');
-
             const file = input.files[0];
             if (file) {
                 const reader = new FileReader();
-
                 reader.onload = function (e) {
                     const img = new Image();
                     img.src = e.target.result;
-
                     img.onload = function () {
+                        showLoading();
                         Tesseract.recognize(
                             img, 'eng',
                         ).then((data) => {
+                            Swal.close();
                             //console.log(data); console.log(data.text);
                             resultContainer.innerHTML = data.html;
                             //resultContainer.innerHTML = "TEXT EXTRACTED IS:<br>" + data.text; 
                         });
                     };
                 };
-
                 reader.readAsDataURL(file);
             } else {
                 resultContainer.innerHTML = 'Please select an image.';
@@ -350,10 +364,12 @@
         }
 
         function performDrawingOCR() {
+            showLoading();
             canvas.isDrawingMode = false; // Disable drawing mode before OCR
             Tesseract.recognize(
                 canvas.toDataURL(), 'eng'
             ).then((data) => {
+                Swal.close();
                 canvas.isDrawingMode = true; // Enable drawing mode before OCR
                 document.getElementById('drawResult').innerHTML = "IMAGE RECOGNIZED AS:<br>" + data.html;
                 //document.getElementById('drawResult').innerHTML = "IMAGE RECOGNIZED AS:<br>" + data.text;
@@ -415,7 +431,7 @@
             document.getElementById("result").innerHTML = "";
         }
         function LogOut() {
-            localStorage.removeItem("current_user");
+            sessionStorage.removeItem("current_user_cshndf213162");
             location.href = "login.html";
         }
     </script>

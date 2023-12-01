@@ -3,8 +3,8 @@ let user = {};
 
 	( function ( document, window, index )
 	{
-		if(!localStorage.getItem("current_user")) location.href = "login.html";
-		user = JSON.parse(localStorage.getItem("current_user"));
+		if(!sessionStorage.getItem("current_user_cshndf213162")) location.href = "login.html";
+		user = JSON.parse(sessionStorage.getItem("current_user_cshndf213162"));
 		document.getElementById("userName").innerHTML = user.name;
 
 		// feature detection for drag&drop upload

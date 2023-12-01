@@ -201,7 +201,7 @@ var KTSignupGeneral = function () {
         batch.commit().then(() => {
             // Show message popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
             Swal.fire({
-                text: "You have successfully reset your password!",
+                text: "Congrats! Your registration is done successfully",
                 icon: "success",
                 buttonsStyling: false,
                 confirmButtonText: "Ok, got it!",

@@ -109,15 +109,13 @@ var KTAuthNewPassword = function () {
                                             confirmButton: "btn btn-primary"
                                         }
                                     }).then(function (result) {
-                                        if (result.isConfirmed) {
-                                            form.querySelector('[name="password"]').value = "";
+                                        form.querySelector('[name="password"]').value = "";
                                             form.querySelector('[name="confirm-password"]').value = "";
                                             passwordMeter.reset();
                                             var redirectUrl = form.getAttribute('data-kt-redirect-url');
                                             if (redirectUrl) {
                                                 location.href = redirectUrl;
                                             }
-                                        }
                                     });
                                     sessionStorage.removeItem("reset_email_cshndf213125");
                                     sessionStorage.removeItem("current_user_cshndf213125");
