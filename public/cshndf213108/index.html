@@ -694,15 +694,34 @@
                 </div>
             </div>
         </div>
-
-    </main>
-
+    </main> 
     <!-- Vendor Custom -->
     <script src="assets/js/vendor/jquery-3.6.4.min.js"></script>
     <script src="assets/js/vendor/bootstrap.bundle.min.js"></script>
     <script src="assets/js/vendor/prism.js"></script>
     <!-- Main Custom -->
     <script src="assets/js/main.js"></script>
+    <script>
+         
+        function showLoading() {
+            Swal.fire({
+                title: '', text: 'Processing....',
+                imageUrl: 'assets/img/loading.gif',
+                showConfirmButton: false,
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                onOpen: () => {
+                    Swal.showLoading();
+                }
+            })
+        }
+        if(!sessionStorage.getItem("current_user_cshndf213108"))
+            LogOut();
+        function LogOut() {
+            sessionStorage.removeItem("current_user_cshndf213108");
+            location.href = "login.html";
+        }
+    </script>
 </body>
 
 

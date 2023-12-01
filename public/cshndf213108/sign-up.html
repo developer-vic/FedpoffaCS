@@ -53,9 +53,17 @@
                                 <h6>
                                     Design an implementation of online help desk management and information system
                                 </h6>
+                                <p style="color: blueviolet;">By: CS/HND/F21/3108</p>
                                 <h4>Register your Information</h4>
                             </div>
                             <form class="gx-form" id="signup_form">
+                                <div class="gx-inline-block">
+                                    <label>User Type:</label> <br>
+                                    <select id="usertype" style="width: 100%;">
+                                        <option value="Student">Student</option>
+                                        <option value="Admin">Admin</option>
+                                    </select> 
+                                </div>
                                 <div class="gx-inline-block">
                                     <label>Name:</label>
                                     <input type="text" placeholder="Name" id="name">
@@ -181,7 +189,6 @@
                 </div>
             </div>
         </div>
-
     </main>
 
     <!-- Vendor Custom -->
@@ -190,6 +197,10 @@
     <script src="assets/js/vendor/prism.js"></script>
     <!-- Main Custom -->
     <script src="assets/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-app.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-firestore.js"></script>
     <script src="assets/js/signup.js"></script>
 </body>
 

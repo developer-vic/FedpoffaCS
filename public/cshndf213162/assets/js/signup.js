@@ -49,6 +49,7 @@ async function CheckForEmail(postData) {
         if (docSnapshot.exists) {
             const data = docSnapshot.data();
             if (data) {
+                Swal.close();
                 Swal.fire({
                     text: "Sorry, this email address has already been registered, please try again.",
                     icon: "error",
@@ -57,14 +58,13 @@ async function CheckForEmail(postData) {
                     customClass: {
                         confirmButton: "btn btn-primary"
                     }
-                });
-                // Hide loading indication
-                Swal.close();
+                }); 
                 return;
             }
         }
     } catch (error) {
         console.error("Error checking key existence:", error);
+        Swal.close();
         Swal.fire({
             text: "Sorry, There are error while validating the record, please try again.",
             icon: "error",
@@ -73,9 +73,7 @@ async function CheckForEmail(postData) {
             customClass: {
                 confirmButton: "btn btn-primary"
             }
-        });
-        // Hide loading indication
-        Swal.close();
+        }); 
         return;
     } 
     firestorePost(postData);
@@ -89,6 +87,7 @@ function firestorePost(postData) {
     batch.set(regCollectionRef, postData);
     // Commit the batch
     batch.commit().then(() => {
+        Swal.close();
         // Show message popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
         Swal.fire({
             text: "Congrats! Your registration is done successfully",
@@ -104,6 +103,7 @@ function firestorePost(postData) {
     }).catch((error) => {
         // The write failed...
         console.error(error);
+        Swal.close();
         // Show error popup. For more info check the plugin's official documentation: https://sweetalert2.github.io/
         Swal.fire({
             text: "Sorry, There are errors saving the record, please try again.",
@@ -113,9 +113,7 @@ function firestorePost(postData) {
             customClass: {
                 confirmButton: "btn btn-primary"
             }
-        });
-        // Hide loading indication
-        Swal.close();
+        }); 
     });
 }
 
