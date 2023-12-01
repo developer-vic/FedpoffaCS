@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+
+<!-- Mirrored from maraviyainfotech.com/projects/guidex/guidex-html/help-desk/knowledgebase.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 27 Nov 2023 11:53:09 GMT -->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="keywords"
+        content="guide, doc, documentation, api doc, catalog, code documentation, doc, docs, documentation, documentation template, documentation tool, getting started, guide, help, manual, online documentation, reference, specification">
+    <meta name="description"
+        content="Guidex - Design an implementation of an Optical Character Recognition (OCR) System">
+    <meta name="author" content="ashishmaraviya">
+
+    <title>
+        OCR - Design an implementation of an Optical Character Recognition (OCR) System
+    </title>
+
+
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="assets/img/favicon/favicon.ico">
+
+    <!-- Icon CSS -->
+    <link href="assets/css/vendor/materialdesignicons.min.css" rel="stylesheet">
+    <link href="assets/css/vendor/remixicon.css" rel="stylesheet">
+
+    <!-- Vendor -->
+    <link href="assets/css/vendor/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/css/vendor/prism.css" rel="stylesheet">
+
+    <!-- Main CSS -->
+    <link id="mainCss" href="assets/css/style.css" rel="stylesheet">
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.5.0/fabric.min.js"></script>
+    <script src="https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js"></script>
+
+</head>
+
+<body>
+    <main class="wrapper sb-default">
+        <!-- Loader -->
+        <div id="gx-overlay">
+            <div class="gx-ellipsis">
+                <div></div>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+
+
+        <!-- Header -->
+        <header class="gx-header">
+            <div class="container-fluid">
+                <div class="gx-header-items">
+                    <div class="left-header">
+                        <a href="ocr.html" class="gx-toggle-sidebar">
+                            <img src="assets/img/logo/full-logo-2.png" alt="full-logo" class="white-mode-logo">
+                            <img src="assets/img/logo/full-logo.png" alt="full-logo" class="dark-mode-logo">
+                        </a>
+                        <div class="header-search-box">
+                            <div class="header-search-drop">
+                                <h6 style="margin-top: 10px;">
+                                    Design an implementation of an Optical Character Recognition (OCR) System
+                                </h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right-header">
+                        Supervised By: Dr. Fatimoh A. Taofeek-Ibrahim
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- main content -->
+        <div class="gx-main-content">
+            <div class="container">
+                <div class="gx-page-title gx-page-title-2 m-t-30">
+                    <div class="gx-breadcrumb">
+                        <h5>By: CS/ND/F21/3126</h5>
+                        <ul>
+                            <li><a href="ocr.html">Home</a></li>
+                            <li>O.C.R</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="row sections">
+                    <div class="gx-side-overlay"></div>
+                    <div class="col-xl-3 col-lg-4 col-md-12 gx-topic">
+                        <div class="gx-card topic-sidebar">
+                            <div class="gx-card-header">
+                                <h4 class="gx-card-title">Menu</h4>
+                            </div>
+                            <div class="gx-card-content gx-topic-list">
+                                <nav>
+                                    <ul class="gx-sb-list">
+                                        <li class="gx-sb-item" style="margin-left: -20px;">
+                                            <a href="ocr.html" class="gx-page-link"
+                                                style="color: white; background-color: #5f6af5; padding-left: 20px; border-radius: 20px;">
+                                                <i class="ri-pages-line"></i>
+                                                <span class="condense">
+                                                    <span class="hover-title">O.C.R</span>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="gx-sb-item">
+                                            <a href="reset-password.html" class="gx-page-link">
+                                                <i class="ri-lock-unlock-line"></i>
+                                                <span class="condense">
+                                                    <span class="hover-title">reset password</span>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="gx-sb-item">
+                                            <a href="#" onclick="LogOut();" class="gx-page-link">
+                                                <i class="ri-login-box-line"></i>
+                                                <span class="condense">
+                                                    <span class="hover-title">
+                                                        Log Out (<span id="userName"></span>)
+                                                    </span>
+                                                </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-5 col-lg-8 col-md-12 order-lg-1 order-2">
+                        <div class="gx-card p-24">
+                            <div class="gx-knowledgebase">
+                                <div class="heading">
+                                    <h4 style="text-align: center;">Optical Character Recognition</h4>
+                                </div>
+                                <div>
+
+
+                                    <link rel="stylesheet" href="assets/css/main.css" />
+                                    <div class="container" role="main" style="text-align: center; margin: 0 auto;">
+                                        <form method="post" action="" enctype="multipart/form-data" novalidate
+                                            class="box">
+                                            <div class="box__input">
+                                                <svg class="box__icon" xmlns="http://www.w3.org/2000/svg" width="50"
+                                                    height="43" viewBox="0 0 50 43">
+                                                    <path
+                                                        d="M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-43.3v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h46.7c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7zm-24.5 6.1c.3.3.8.5 1.2.5.4 0 .9-.2 1.2-.5l10-11.6c.7-.7.7-1.7 0-2.4s-1.7-.7-2.4 0l-7.1 8.3v-25.3c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v25.3l-7.1-8.3c-.7-.7-1.7-.7-2.4 0s-.7 1.7 0 2.4l10 11.6z" />
+                                                </svg>
+                                                <input type="file" name="files[]" id="imageInput" class="box__file"
+                                                    data-multiple-caption="{count} files selected" multiple />
+                                                <label>
+                                                    <strong style="color: #5f6af5;">
+                                                        or drag it here upload
+                                                    </strong>
+                                                </label>
+
+                                                <button type="submit" class="box__button" hidden>Upload</button>
+                                                <br> <br>
+                                                <button type="button" onclick="performOCR()"
+                                                    class="btn btn-primary">Extract Text</button>
+                                                <button type="button" onclick="clearImageUpload()"
+                                                    class="btn btn-danger">Clear Upload</button>
+                                            </div>
+
+                                            <div class="box__uploading">Uploading&hellip;</div>
+                                            <div class="box__success">Done!
+                                                <a href="ocr" class="box__restart" role="button">
+                                                    Upload more?
+                                                </a>
+                                            </div>
+                                            <div class="box__error">Error! <span></span>.
+                                                <a href="ocr" class="box__restart" role="button">
+                                                    Try again!</a>
+                                            </div>
+                                        </form>
+                                        <!-- <div id="result" class="mt-3"></div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg-8 col-md-12 order-lg-2 order-1">
+                        <div class="gx-card topic-sidebar">
+                            <div class="gx-card-header">
+                                <h1 class="gx-card-title" style="text-align: center;">OCR Output</h1>
+                            </div>
+                            <div class="gx-card-content gx-topic-list" style="padding-top: 10px;">
+                                <div id="long-text" style="height: 280px; overflow-y: auto;">
+                                    <p id="result"></p>
+                                </div>
+                                <button onclick="copyOutput()" class="btn btn-success mt-3">
+                                    Copy
+                                </button>
+                                <button onclick="clearOutput()" class="btn btn-danger mt-3">
+                                    Clear
+                                </button>
+                                <div hidden>
+                                    <canvas id="drawCanvas" width="300" height="300"
+                                        style="border: 1px solid #ccc;"></canvas>
+                                    <button onclick="performDrawingOCR()" class="btn btn-success mt-3">Recognize
+                                        Picture</button>
+                                    <button onclick="clearDrawingCanvas()" class="btn btn-danger mt-3">Clear
+                                        Picture</button>
+                                    <div id="drawResult" class="mt-3"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature tools -->
+        <div class="gx-tools-sidebar-overlay"></div>
+        <div class="gx-tools-sidebar">
+            <span class="gx-tools-sidebar-toggle in-out">
+                <i class="ri-settings-4-line"></i>
+            </span>
+            <div class="gx-bar-title">
+                <h6>Tools</h6>
+                <span class="close-tools"><i class="ri-close-line"></i></span>
+            </div>
+            <div class="gx-tools-detail">
+                <div class="gx-tools-block">
+                    <h3>Select Color</h3>
+                    <ul class="gx-color">
+                        <li class="color-primary active-variant"></li>
+                        <li class="color-1"></li>
+                        <li class="color-2"></li>
+                        <li class="color-3"></li>
+                        <li class="color-4"></li>
+                        <li class="color-5"></li>
+                        <li class="color-6"></li>
+                        <li class="color-7"></li>
+                        <li class="color-8"></li>
+                        <li class="color-9"></li>
+                    </ul>
+                </div>
+                <div class="gx-tools-block">
+                    <h3>Modes</h3>
+                    <div class="gx-tools-info">
+                        <div class="gx-tools-item mode active" data-gx-mode-tool="light">
+                            <img src="assets/img/tools/light.png" alt="light">
+                            <p>light</p>
+                        </div>
+                        <div class="gx-tools-item mode" data-gx-mode-tool="dark">
+                            <img src="assets/img/tools/dark.png" alt="dark">
+                            <p>dark</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="gx-tools-block">
+                    <h3>Backgrounds</h3>
+                    <div class="gx-tools-info">
+                        <div class="gx-tools-item bg active" data-bg-mode="default">
+                            <img src="assets/img/tools/bg-0.png" alt="default">
+                            <p>Default</p>
+                        </div>
+                        <div class="gx-tools-item bg" data-bg-mode="bg-1">
+                            <img src="assets/img/tools/bg-1.png" alt="bg-1">
+                            <p>Bg-1</p>
+                        </div>
+                        <div class="gx-tools-item bg" data-bg-mode="bg-2">
+                            <img src="assets/img/tools/bg-2.png" alt="bg-2">
+                            <p>Bg-2</p>
+                        </div>
+                        <div class="gx-tools-item bg" data-bg-mode="bg-3">
+                            <img src="assets/img/tools/bg-3.png" alt="bg-3">
+                            <p>Bg-3</p>
+                        </div>
+                        <div class="gx-tools-item bg" data-bg-mode="bg-4">
+                            <img src="assets/img/tools/bg-4.png" alt="bg-4">
+                            <p>Bg-4</p>
+                        </div>
+                        <div class="gx-tools-item bg" data-bg-mode="bg-5">
+                            <img src="assets/img/tools/bg-5.png" alt="bg-5">
+                            <p>Bg-5</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="gx-tools-block">
+                    <h3>Box Design</h3>
+                    <div class="gx-tools-info">
+                        <div class="gx-tools-item box active" data-box-mode-tool="default">
+                            <img src="assets/img/tools/box-0.png" alt="default">
+                            <p>Default</p>
+                        </div>
+                        <div class="gx-tools-item box" data-box-mode-tool="box-1">
+                            <img src="assets/img/tools/box-1.png" alt="box-1">
+                            <p>Box-1</p>
+                        </div>
+                        <div class="gx-tools-item box" data-box-mode-tool="box-2">
+                            <img src="assets/img/tools/box-2.png" alt="box-2">
+                            <p>Box-2</p>
+                        </div>
+                        <div class="gx-tools-item box" data-box-mode-tool="box-3">
+                            <img src="assets/img/tools/box-3.png" alt="box-3">
+                            <p>Box-3</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Vendor Custom -->
+    <script src="assets/js/vendor/jquery-3.6.4.min.js"></script>
+    <script src="assets/js/vendor/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/vendor/prism.js"></script>
+    <!-- Main Custom -->
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/vendor/ocr.js"></script>
+
+    <script>
+        var canvas = new fabric.Canvas('drawCanvas', { isDrawingMode: true });
+
+        function performOCR(form) {
+            // Your OCR logic for image upload...
+            const input = document.getElementById('imageInput');
+            const resultContainer = document.getElementById('result');
+
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const img = new Image();
+                    img.src = e.target.result;
+
+                    img.onload = function () {
+                        Tesseract.recognize(
+                            img, 'eng',
+                        ).then((data) => {
+                            //console.log(data); console.log(data.text);
+                            resultContainer.innerHTML = data.html;
+                            //resultContainer.innerHTML = "TEXT EXTRACTED IS:<br>" + data.text; 
+                        });
+                    };
+                };
+
+                reader.readAsDataURL(file);
+            } else {
+                resultContainer.innerHTML = 'Please select an image.';
+            }
+        }
+
+        function performDrawingOCR() {
+            canvas.isDrawingMode = false; // Disable drawing mode before OCR
+            Tesseract.recognize(
+                canvas.toDataURL(), 'eng'
+            ).then((data) => {
+                canvas.isDrawingMode = true; // Enable drawing mode before OCR
+                document.getElementById('drawResult').innerHTML = "IMAGE RECOGNIZED AS:<br>" + data.html;
+                //document.getElementById('drawResult').innerHTML = "IMAGE RECOGNIZED AS:<br>" + data.text;
+            });
+        }
+
+        function clearImageUpload() {
+            document.getElementById('imageInput').value = '';
+            document.getElementById('result').innerHTML = '';
+        }
+
+        function clearDrawingCanvas() {
+            canvas.clear();
+            document.getElementById('drawResult').innerHTML = '';
+        }
+
+        function handleImageUpload(event) {
+            const fileInput = document.getElementById('imageInput');
+            const resultContainer = document.getElementById('result');
+
+            const file = event[0];
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    resultContainer.innerHTML = ''; // Clear previous results
+                    fabric.Image.fromURL(e.target.result, function (img) {
+                        // Clear previous image
+                        canvas.clear();
+                        canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+                            scaleX: canvas.width / img.width,
+                            scaleY: canvas.height / img.height
+                        });
+                    });
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function dropHandler(event) {
+            event.preventDefault();
+            const file = event.dataTransfer.files[0];
+            if (file) {
+                handleImageUpload({ target: { files: [file] } });
+            }
+        }
+
+        function dragOverHandler(event) {
+            event.preventDefault();
+        }
+
+        function copyOutput() {
+            const resultElement = document.getElementById("result");
+            const textToCopy = resultElement.textContent;
+            navigator.clipboard.writeText(textToCopy);
+        }
+        function clearOutput() {
+            document.getElementById("result").innerHTML = "";
+        }
+        function LogOut() {
+            localStorage.removeItem("current_user");
+            location.href = "login.html";
+        }
+    </script>
+</body>
+
+
+<!-- Mirrored from maraviyainfotech.com/projects/guidex/guidex-html/help-desk/knowledgebase.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 27 Nov 2023 11:53:09 GMT -->
+
+</html>
