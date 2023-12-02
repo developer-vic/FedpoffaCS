@@ -3,17 +3,19 @@
 
 
 <!-- Mirrored from maraviyainfotech.com/projects/guidex/guidex-html/help-desk/sign-up.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 27 Nov 2023 11:53:10 GMT -->
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="keywords"
         content="guide, doc, documentation, api doc, catalog, code documentation, doc, docs, documentation, documentation template, documentation tool, getting started, guide, help, manual, online documentation, reference, specification">
-    <meta name="description" content="Guidex - Design an implementation of online help desk management and information system">
+    <meta name="description"
+        content="Guidex - Design an implementation of online help desk management and information system">
     <meta name="author" content="ashishmaraviya">
 
     <title> Sign Up - Design an implementation of online help desk management and information system
-</title>
+    </title>
 
     <!-- App favicon -->
     <link rel="shortcut icon" href="assets/img/favicon/favicon.ico">
@@ -56,17 +58,52 @@
                                 <p style="color: blueviolet;">By: CS/HND/F21/3108</p>
                                 <h4>Register your Information</h4>
                             </div>
-                            <form class="gx-form" id="signup_form">
-                                <div class="gx-inline-block">
-                                    <label>User Type:</label> <br>
-                                    <select id="usertype" style="width: 100%;">
-                                        <option value="Student">Student</option>
-                                        <option value="Admin">Admin</option>
-                                    </select> 
+                            <form class="gx-form" id="signup_form"> 
+                                <div class="form-field">
+                                    <div class="br-select">
+                                        <div class="br-input">
+                                            <label class="label-heading">Select User Type</label>
+                                            <br>
+                                            <div class="drop-down">
+                                                <div class="header">
+                                                    <div class="filter_selected" id="usertype"></div>
+                                                    <i class="ri-arrow-drop-down-line"></i>
+                                                </div>
+                                                <div class="filters">
+                                                    <div class="filter">Student</div>
+                                                    <div class="filter">Admin</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-field">
+                                    <div class="br-select">
+                                        <div class="br-input">
+                                            <label class="label-heading">Select Department</label>
+                                            <br>
+                                            <div class="drop-down">
+                                                <div class="header">
+                                                    <div class="filter_selected" id="department"></div>
+                                                    <i class="ri-arrow-drop-down-line"></i>
+                                                </div>
+                                                <div class="filters">
+                                                    <div class="filter">Community Health</div>
+                                                    <div class="filter">Environmental Health Science</div>
+                                                    <div class="filter">Health Education</div>
+                                                    <div class="filter">Health Information Mangement</div>
+                                                    <div class="filter">Human Nutrition</div>
+                                                    <div class="filter">Medical Laboratory</div>
+                                                    <div class="filter">Dental Health</div>
+                                                    <div class="filter">Pharmacy</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="gx-inline-block">
-                                    <label>Name:</label>
-                                    <input type="text" placeholder="Name" id="name">
+                                    <label>Full Name:</label>
+                                    <input type="text" placeholder="Full Name" id="name">
                                 </div>
                                 <div class="gx-inline-block">
                                     <label>Email:</label>
@@ -79,18 +116,17 @@
                                 </div>
                                 <div class="gx-inline-block">
                                     <label>Confirm Password:</label>
-                                    <input  id="password2" type="password" placeholder="Password">
+                                    <input id="password2" type="password" placeholder="Password">
                                     <i toggle="#password2" class="toggle-password ri-eye-line"></i>
                                 </div>
                                 <div class="gx-signup-buttons">
-                                    <button type="button" id="signup_btn"
-                                         class="gx-btn-primary gx-model">
+                                    <button type="button" id="signup_btn" class="gx-btn-primary gx-model">
                                         Sign Up
-                                    </button> 
-                                        <a href="login.html" class="back-to">
-                                            <i class="ri-arrow-left-s-line"></i> 
-                                            Goto Login</a> 
-                                </div>            
+                                    </button>
+                                    <a href="login.html" class="back-to">
+                                        <i class="ri-arrow-left-s-line"></i>
+                                        Goto Login</a>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -199,11 +235,12 @@
     <script src="assets/js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-app.js"></script>
-	<script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase-firestore.js"></script>
     <script src="assets/js/signup.js"></script>
 </body>
 
 
 <!-- Mirrored from maraviyainfotech.com/projects/guidex/guidex-html/help-desk/sign-up.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 27 Nov 2023 11:53:10 GMT -->
+
 </html>

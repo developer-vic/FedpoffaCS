@@ -2,23 +2,10 @@ cshndf213125 - BioDataRetrieval
 cshndf213162 - OCR
 cshndf213108 - HelpDesk
 
-question detail, reponse, reply:
-http://127.0.0.1:5500/public/cshndf213108/forum.html
+ 
 
-question list:
-http://127.0.0.1:5500/public/cshndf213108/forum-list.html
+st@ma.com
 
-Ask question:
-http://127.0.0.1:5500/public/cshndf213108/forum-post.html
-
-faq:
-http://127.0.0.1:5500/public/cshndf213108/faq.html
-
-home:
-http://127.0.0.1:5500/public/cshndf213108/help.html
-
-logout
-reset pw
 
 
 Design and Implementation of Online Help Desk Management and Information System

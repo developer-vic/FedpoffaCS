@@ -430,7 +430,7 @@
                 }
             })
         }
-        if(!sessionStorage.removeItem("current_user_cshndf213162"))
+        if(!sessionStorage.getItem("current_user_cshndf213162"))
             LogOut();
         function LogOut() {
             sessionStorage.removeItem("current_user_cshndf213162");

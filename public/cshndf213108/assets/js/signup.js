@@ -22,11 +22,12 @@ function showLoading() {
         }
     })
 }
- 
+
 let signup_btn = document.getElementById("signup_btn");
 signup_btn.addEventListener('click', function (e) {
     e.preventDefault();
-    let usertype = document.getElementById("usertype").value;
+    let usertype = document.getElementById("usertype").innerHTML;
+    let department = document.getElementById("department").innerHTML;
     let name = document.getElementById("name").value;
     let email = document.getElementById("email").value;
     let password = document.getElementById("password").value;
@@ -36,7 +37,7 @@ signup_btn.addEventListener('click', function (e) {
     else if(password != password2)
         alert("Password do not match");
     else{  
-        let user = {usertype: usertype, name: name, email: email, password: password };
+        let user = {usertype: usertype, department: department, name: name, email: email, password: password };
         CheckForEmail(user); 
     }
 });
