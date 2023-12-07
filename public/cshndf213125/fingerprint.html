@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web App</title>
+</head>
+
+<body>
+    <script>
+        // Example function to send "username" and "id" to the WinForms app
+        async function sendDataToWinForms() { 
+            const requestData = "JohnDoe";
+            const targetUrl = 'http://localhost:5000/';
+            let headers = new Headers();
+            headers.append('Content-Type', 'text/plain');
+            headers.append('Accept', 'text/plain');
+            headers.append('Origin', "http://localhost:5500");
+            //headers.append('Access-Control-Allow-Methods', 'POST');
+            //headers.append('Access-Control-Allow-Origin', "*");
+            //headers.append('Access-Control-Allow-Credentials', 'true'); 
+            const response = await fetch(targetUrl, {
+                mode: 'cors',
+                credentials: 'include',
+                method: 'POST',
+                headers: headers,
+                body: requestData
+            });
+            // Handle the response from the WinForms app
+            if (response.ok) {
+                const responseText = await response.text();
+                console.log('responseText :' + responseText);
+            } else { 
+                console.log('Request failed (status ' + response.status + ')');
+            } 
+        }
+
+        // Call the function when needed
+        sendDataToWinForms();
+    </script>
+</body>
+
+</html>

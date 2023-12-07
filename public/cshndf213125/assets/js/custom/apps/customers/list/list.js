@@ -1,13 +1,13 @@
 "use strict";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDQplDuiwgoOLJV8LEqHc9ZYi5KbfMmc9g",
-    authDomain: "fedpoffacs.firebaseapp.com",
-    projectId: "fedpoffacs",
-    storageBucket: "fedpoffacs.appspot.com",
-    messagingSenderId: "572139824346",
-    appId: "1:572139824346:web:eb24dd16ac0cea086db1e3",
-    measurementId: "G-XEM4TRP48W"
+  apiKey: "AIzaSyDQplDuiwgoOLJV8LEqHc9ZYi5KbfMmc9g",
+  authDomain: "fedpoffacs.firebaseapp.com",
+  projectId: "fedpoffacs",
+  storageBucket: "fedpoffacs.appspot.com",
+  messagingSenderId: "572139824346",
+  appId: "1:572139824346:web:eb24dd16ac0cea086db1e3",
+  measurementId: "G-XEM4TRP48W",
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
@@ -15,378 +15,477 @@ firebase.initializeApp(firebaseConfig);
 let bioList = [];
 
 function generateSignatureId(signatureData) {
-    return btoa(signatureData);
+  return btoa(signatureData);
 }
 let vUserId = "";
 function viewDetails(userId) {
-    document.getElementById("btnView").click();
+  //document.getElementById("btnView").click();
+  Swal.fire({
+    text: "Run the Fingerprint Application then click CONNECT",
+    icon: "info",
+    buttonsStyling: false,
+    confirmButtonText: "CONNECT!",
+    customClass: {
+      confirmButton: "btn btn-primary",
+    },
+  }).then(function (result) {
+    if (result.isConfirmed) {
+      sendDataToWinForms();
+    }
+  });
+  async function sendDataToWinForms() {
     vUserId = userId;
+    const requestData = vUserId;
+    const targetUrl = "http://localhost:5000/";
+    let headers = new Headers();
+    headers.append("Content-Type", "text/plain");
+    headers.append("Accept", "text/plain");
+    headers.append("Origin", "https://fedpoffacs.web.app");
+    let error_text;
+    const response = await fetch(targetUrl, {
+      mode: "cors",
+      credentials: "include",
+      method: "POST",
+      headers: headers,
+      body: requestData,
+    }).catch((error) => {
+      error_text = "Sorry, Errror occurred with fingerprint, please try again.";
+      console.log(error);
+    });
+    // Handle the response from the WinForms app
+    if (response) {
+      if (response.ok) {
+        const responseText = await response.text();
+        if (responseText === "true") {
+          let userDetail = bioList.find(
+            (item) =>
+              item.userId === requestData
+          );
+          if (userDetail) {
+            sessionStorage.setItem("viewDetails", JSON.stringify(userDetail));
+            location.href = "view.html";
+          }else{
+            error_text =
+            "Sorry, Record not found, please try again.";
+          }
+        } else {
+          error_text =
+            "Sorry, Errror occurred with fingerprint, please try again.";
+        }
+      } else {
+        error_text =
+          "Sorry, Unable to connect with fingerprint, please try again.";
+        console.log("Request failed (status " + response.status + ")");
+      }
+    }
+
+    if (error_text)
+      Swal.fire({
+        text: error_text,
+        icon: "error",
+        buttonsStyling: false,
+        confirmButtonText: "Ok, got it!",
+        customClass: {
+          confirmButton: "btn btn-primary",
+        },
+      });
+  }
 }
 
 // Class definition
-var KTCustomersList = function () {
-    // Define shared variables
-    var datatable;
-    var filterMonth;
-    var filterPayment;
-    var table;
-    var submitSignatureButton;
-    var form;
+var KTCustomersList = (function () {
+  // Define shared variables
+  var datatable;
+  var filterMonth;
+  var filterPayment;
+  var table;
+  var submitSignatureButton;
+  var form;
 
-    // Private functions
-    var initCustomerList = function () {
-        // Set date data order
-        const tableRows = table.querySelectorAll('tbody tr');
+  // Private functions
+  var initCustomerList = function () {
+    // Set date data order
+    const tableRows = table.querySelectorAll("tbody tr");
 
-        tableRows.forEach(row => {
-            const dateRow = row.querySelectorAll('td');
-            const realDate = moment(dateRow[5].innerHTML, "DD MMM YYYY, LT").format(); // select date from 5th column in table
-            dateRow[5].setAttribute('data-order', realDate);
-        });
+    tableRows.forEach((row) => {
+      const dateRow = row.querySelectorAll("td");
+      const realDate = moment(dateRow[5].innerHTML, "DD MMM YYYY, LT").format(); // select date from 5th column in table
+      dateRow[5].setAttribute("data-order", realDate);
+    });
 
-        // Init datatable --- more info on datatables: https://datatables.net/manual/
-        datatable = $(table).DataTable({
-            "info": false,
-            'order': [],
-            'columnDefs': [
-                { orderable: false, targets: 0 }, // Disable ordering on column 0 (checkbox)
-                { orderable: false, targets: 1 }, { orderable: false, targets: 2 },
-                { orderable: false, targets: 3 }, { orderable: false, targets: 4 },
-                { orderable: false, targets: 5 },
-                { orderable: false, targets: 6 }, // Disable ordering on column 6 (actions)
-            ]
-        });
+    // Init datatable --- more info on datatables: https://datatables.net/manual/
+    datatable = $(table).DataTable({
+      info: false,
+      order: [],
+      columnDefs: [
+        { orderable: false, targets: 0 }, // Disable ordering on column 0 (checkbox)
+        { orderable: false, targets: 1 },
+        { orderable: false, targets: 2 },
+        { orderable: false, targets: 3 },
+        { orderable: false, targets: 4 },
+        { orderable: false, targets: 5 },
+        { orderable: false, targets: 6 }, // Disable ordering on column 6 (actions)
+      ],
+    });
 
-        // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
-        datatable.on('draw', function () {
-            initToggleToolbar();
-            handleDeleteRows();
-            toggleToolbars();
-        });
- 
-        // Example data 
-        GetBioDataList();
-        // Action buttons
-        submitSignatureButton.addEventListener('click', function (e) {
-            e.preventDefault();
-            //let bioForm = document.getElementById("kt_modal_view_customer_form");
-            var signatureInput = document.getElementById("signatureView");
-            const signature = signatureInput.files[0];
-            if (signature) {
-                // Disable submit button whilst loading
-                submitSignatureButton.setAttribute('data-kt-indicator', 'on');
-                submitSignatureButton.disabled = true;
-                setTimeout(() => {
-                    //validating file
-                    const reader = new FileReader();
-                    reader.onload = async function (e) {
-                        const signatureData = e.target.result;
-                        const signatureId = await sha256(signatureData); // generateSignatureId(signatureData);
-                        let userDetail = bioList.find(item => item.userId === vUserId 
-                                                    && item.signatureId === signatureId);
-                        if (userDetail) {
-                            sessionStorage.setItem("viewDetails", JSON.stringify(userDetail));
-                            location.href = "view.html";
-                        }
-                        else {
-                            Swal.fire({
-                                text: "The signature you uploaded does not match the signature used to save the bio data, please try again.",
-                                icon: "error",
-                                buttonsStyling: false,
-                                confirmButtonText: "Ok, got it!",
-                                customClass: {
-                                    confirmButton: "btn btn-primary"
-                                }
-                            });
-                            // Enable submit button after loading
-                            submitSignatureButton.setAttribute('data-kt-indicator', 'off');
-                            submitSignatureButton.disabled = false;
-                        }
-                    };
-                    reader.readAsDataURL(signature);
-                }, 2000);
-            }
-            else {
-                Swal.fire({
-                    text: "Please, upload the signature to view the bio data, please try again.",
-                    icon: "error",
-                    buttonsStyling: false,
-                    confirmButtonText: "Ok, got it!",
-                    customClass: {
-                        confirmButton: "btn btn-primary"
-                    }
-                });
-            }
-        });
-    }
+    // Re-init functions on every table re-draw -- more info: https://datatables.net/reference/event/draw
+    datatable.on("draw", function () {
+      initToggleToolbar();
+      handleDeleteRows();
+      toggleToolbars();
+    });
 
-    async function GetBioDataList() { 
-        const db = firebase.firestore();
-        const bioDataCollectionRef = db.collection('projectHND23/cshndf213125/bioDataRecords');
-        bioDataCollectionRef.get()
-            .then(querySnapshot => {
-                bioList = [];
-                querySnapshot.forEach(doc => { 
-                    let rowData = doc.data(); // JSON.parse(bio.data);
-                    bioList.push(rowData);
-                    // Clone the template
-                    let templateRow = document.getElementById('templateRow');
-                    let newRow = templateRow.cloneNode(true);
-                    newRow.innerHTML = newRow.innerHTML.replace(/\[(.*?)\]/g, (_, key) => rowData[key]);
-                    //let signatureId = rowData.signatureId;
-                    // updateSignatureImage(newRow, signatureId);
-                    document.getElementById('yourTableBodyId').appendChild(newRow);
-                    newRow.style.display = '';
-                }
-                );
-            })
-            .catch(err => console.log(err));
-    }
-
-
-    // Search Datatable --- official docs reference: https://datatables.net/reference/api/search()
-    var handleSearchDatatable = () => {
-        const filterSearch = document.querySelector('[data-kt-customer-table-filter="search"]');
-        filterSearch.addEventListener('keyup', function (e) {
-            datatable.search(e.target.value).draw();
-        });
-    }
-
-    // Filter Datatable
-    var handleFilterDatatable = () => {
-        // Select filter options
-        filterMonth = $('[data-kt-customer-table-filter="month"]');
-        filterPayment = document.querySelectorAll('[data-kt-customer-table-filter="payment_type"] [name="payment_type"]');
-        const filterButton = document.querySelector('[data-kt-customer-table-filter="filter"]');
-
-        // Filter datatable on submit
-        filterButton.addEventListener('click', function () {
-            // Get filter values
-            const monthValue = filterMonth.val();
-            let paymentValue = '';
-
-            // Get payment value
-            filterPayment.forEach(r => {
-                if (r.checked) {
-                    paymentValue = r.value;
-                }
-
-                // Reset payment value if "All" is selected
-                if (paymentValue === 'all') {
-                    paymentValue = '';
-                }
-            });
-
-            // Build filter string from filter options
-            const filterString = monthValue + ' ' + paymentValue;
-
-            // Filter datatable --- official docs reference: https://datatables.net/reference/api/search()
-            datatable.search(filterString).draw();
-        });
-    }
-
-    // Delete customer
-    var handleDeleteRows = () => {
-        // Select all delete buttons
-        const deleteButtons = table.querySelectorAll('[data-kt-customer-table-filter="delete_row"]');
-
-        deleteButtons.forEach(d => {
-            // Delete button on click
-            d.addEventListener('click', function (e) {
-                e.preventDefault();
-
-                // Select parent row
-                const parent = e.target.closest('tr');
-
-                // Get customer name
-                const customerName = parent.querySelectorAll('td')[1].innerText;
-
-                // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
-                Swal.fire({
-                    text: "Are you sure you want to delete " + customerName + "?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    buttonsStyling: false,
-                    confirmButtonText: "Yes, delete!",
-                    cancelButtonText: "No, cancel",
-                    customClass: {
-                        confirmButton: "btn fw-bold btn-danger",
-                        cancelButton: "btn fw-bold btn-active-light-primary"
-                    }
-                }).then(function (result) {
-                    if (result.value) {
-                        Swal.fire({
-                            text: "You have deleted " + customerName + "!.",
-                            icon: "success",
-                            buttonsStyling: false,
-                            confirmButtonText: "Ok, got it!",
-                            customClass: {
-                                confirmButton: "btn fw-bold btn-primary",
-                            }
-                        }).then(function () {
-                            // Remove current row
-                            datatable.row($(parent)).remove().draw();
-                        });
-                    } else if (result.dismiss === 'cancel') {
-                        Swal.fire({
-                            text: customerName + " was not deleted.",
-                            icon: "error",
-                            buttonsStyling: false,
-                            confirmButtonText: "Ok, got it!",
-                            customClass: {
-                                confirmButton: "btn fw-bold btn-primary",
-                            }
-                        });
-                    }
-                });
-            })
-        });
-    }
-
-    // Reset Filter
-    var handleResetForm = () => {
-        // Select reset button
-        const resetButton = document.querySelector('[data-kt-customer-table-filter="reset"]');
-
-        // Reset datatable
-        resetButton.addEventListener('click', function () {
-            // Reset month
-            filterMonth.val(null).trigger('change');
-
-            // Reset payment type
-            filterPayment[0].checked = true;
-
-            // Reset datatable --- official docs reference: https://datatables.net/reference/api/search()
-            datatable.search('').draw();
-        });
-    }
-
-    // Init toggle toolbar
-    var initToggleToolbar = () => {
-        // Toggle selected action toolbar
-        // Select all checkboxes
-        const checkboxes = table.querySelectorAll('[type="checkbox"]');
-
-        // Select elements
-        const deleteSelected = document.querySelector('[data-kt-customer-table-select="delete_selected"]');
-
-        // Toggle delete selected toolbar
-        checkboxes.forEach(c => {
-            // Checkbox on click event
-            c.addEventListener('click', function () {
-                setTimeout(function () {
-                    toggleToolbars();
-                }, 50);
-            });
-        });
-
-        // Deleted selected rows
-        deleteSelected.addEventListener('click', function () {
-            // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
-            Swal.fire({
-                text: "Are you sure you want to delete selected customers?",
-                icon: "warning",
-                showCancelButton: true,
+    // Example data
+    GetBioDataList();
+    // Action buttons
+    submitSignatureButton.addEventListener("click", function (e) {
+      e.preventDefault();
+      //let bioForm = document.getElementById("kt_modal_view_customer_form");
+      var signatureInput = document.getElementById("signatureView");
+      const signature = signatureInput.files[0];
+      if (signature) {
+        // Disable submit button whilst loading
+        submitSignatureButton.setAttribute("data-kt-indicator", "on");
+        submitSignatureButton.disabled = true;
+        setTimeout(() => {
+          //validating file
+          const reader = new FileReader();
+          reader.onload = async function (e) {
+            const signatureData = e.target.result;
+            const signatureId = await sha256(signatureData); // generateSignatureId(signatureData);
+            let userDetail = bioList.find(
+              (item) =>
+                item.userId === vUserId && item.signatureId === signatureId
+            );
+            if (userDetail) {
+              sessionStorage.setItem("viewDetails", JSON.stringify(userDetail));
+              location.href = "view.html";
+            } else {
+              Swal.fire({
+                text: "The signature you uploaded does not match the signature used to save the bio data, please try again.",
+                icon: "error",
                 buttonsStyling: false,
-                confirmButtonText: "Yes, delete!",
-                cancelButtonText: "No, cancel",
+                confirmButtonText: "Ok, got it!",
                 customClass: {
-                    confirmButton: "btn fw-bold btn-danger",
-                    cancelButton: "btn fw-bold btn-active-light-primary"
-                }
-            }).then(function (result) {
-                if (result.value) {
-                    Swal.fire({
-                        text: "You have deleted all selected customers!.",
-                        icon: "success",
-                        buttonsStyling: false,
-                        confirmButtonText: "Ok, got it!",
-                        customClass: {
-                            confirmButton: "btn fw-bold btn-primary",
-                        }
-                    }).then(function () {
-                        // Remove all selected customers
-                        checkboxes.forEach(c => {
-                            if (c.checked) {
-                                datatable.row($(c.closest('tbody tr'))).remove().draw();
-                            }
-                        });
-
-                        // Remove header checked box
-                        const headerCheckbox = table.querySelectorAll('[type="checkbox"]')[0];
-                        headerCheckbox.checked = false;
-                    });
-                } else if (result.dismiss === 'cancel') {
-                    Swal.fire({
-                        text: "Selected customers was not deleted.",
-                        icon: "error",
-                        buttonsStyling: false,
-                        confirmButtonText: "Ok, got it!",
-                        customClass: {
-                            confirmButton: "btn fw-bold btn-primary",
-                        }
-                    });
-                }
-            });
+                  confirmButton: "btn btn-primary",
+                },
+              });
+              // Enable submit button after loading
+              submitSignatureButton.setAttribute("data-kt-indicator", "off");
+              submitSignatureButton.disabled = false;
+            }
+          };
+          reader.readAsDataURL(signature);
+        }, 2000);
+      } else {
+        Swal.fire({
+          text: "Please, upload the signature to view the bio data, please try again.",
+          icon: "error",
+          buttonsStyling: false,
+          confirmButtonText: "Ok, got it!",
+          customClass: {
+            confirmButton: "btn btn-primary",
+          },
         });
-    }
+      }
+    });
+  };
+
+  async function GetBioDataList() {
+    const db = firebase.firestore();
+    const bioDataCollectionRef = db.collection(
+      "projectHND23/cshndf213125/bioDataRecords"
+    );
+    bioDataCollectionRef
+      .get()
+      .then((querySnapshot) => {
+        bioList = [];
+        querySnapshot.forEach((doc) => {
+          let rowData = doc.data(); // JSON.parse(bio.data);
+          bioList.push(rowData);
+          // Clone the template
+          let templateRow = document.getElementById("templateRow");
+          let newRow = templateRow.cloneNode(true);
+          newRow.innerHTML = newRow.innerHTML.replace(
+            /\[(.*?)\]/g,
+            (_, key) => rowData[key]
+          );
+          //let signatureId = rowData.signatureId;
+          // updateSignatureImage(newRow, signatureId);
+          document.getElementById("yourTableBodyId").appendChild(newRow);
+          newRow.style.display = "";
+        });
+      })
+      .catch((err) => console.log(err));
+  }
+
+  // Search Datatable --- official docs reference: https://datatables.net/reference/api/search()
+  var handleSearchDatatable = () => {
+    const filterSearch = document.querySelector(
+      '[data-kt-customer-table-filter="search"]'
+    );
+    filterSearch.addEventListener("keyup", function (e) {
+      datatable.search(e.target.value).draw();
+    });
+  };
+
+  // Filter Datatable
+  var handleFilterDatatable = () => {
+    // Select filter options
+    filterMonth = $('[data-kt-customer-table-filter="month"]');
+    filterPayment = document.querySelectorAll(
+      '[data-kt-customer-table-filter="payment_type"] [name="payment_type"]'
+    );
+    const filterButton = document.querySelector(
+      '[data-kt-customer-table-filter="filter"]'
+    );
+
+    // Filter datatable on submit
+    filterButton.addEventListener("click", function () {
+      // Get filter values
+      const monthValue = filterMonth.val();
+      let paymentValue = "";
+
+      // Get payment value
+      filterPayment.forEach((r) => {
+        if (r.checked) {
+          paymentValue = r.value;
+        }
+
+        // Reset payment value if "All" is selected
+        if (paymentValue === "all") {
+          paymentValue = "";
+        }
+      });
+
+      // Build filter string from filter options
+      const filterString = monthValue + " " + paymentValue;
+
+      // Filter datatable --- official docs reference: https://datatables.net/reference/api/search()
+      datatable.search(filterString).draw();
+    });
+  };
+
+  // Delete customer
+  var handleDeleteRows = () => {
+    // Select all delete buttons
+    const deleteButtons = table.querySelectorAll(
+      '[data-kt-customer-table-filter="delete_row"]'
+    );
+
+    deleteButtons.forEach((d) => {
+      // Delete button on click
+      d.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        // Select parent row
+        const parent = e.target.closest("tr");
+
+        // Get customer name
+        const customerName = parent.querySelectorAll("td")[1].innerText;
+
+        // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
+        Swal.fire({
+          text: "Are you sure you want to delete " + customerName + "?",
+          icon: "warning",
+          showCancelButton: true,
+          buttonsStyling: false,
+          confirmButtonText: "Yes, delete!",
+          cancelButtonText: "No, cancel",
+          customClass: {
+            confirmButton: "btn fw-bold btn-danger",
+            cancelButton: "btn fw-bold btn-active-light-primary",
+          },
+        }).then(function (result) {
+          if (result.value) {
+            Swal.fire({
+              text: "You have deleted " + customerName + "!.",
+              icon: "success",
+              buttonsStyling: false,
+              confirmButtonText: "Ok, got it!",
+              customClass: {
+                confirmButton: "btn fw-bold btn-primary",
+              },
+            }).then(function () {
+              // Remove current row
+              datatable.row($(parent)).remove().draw();
+            });
+          } else if (result.dismiss === "cancel") {
+            Swal.fire({
+              text: customerName + " was not deleted.",
+              icon: "error",
+              buttonsStyling: false,
+              confirmButtonText: "Ok, got it!",
+              customClass: {
+                confirmButton: "btn fw-bold btn-primary",
+              },
+            });
+          }
+        });
+      });
+    });
+  };
+
+  // Reset Filter
+  var handleResetForm = () => {
+    // Select reset button
+    const resetButton = document.querySelector(
+      '[data-kt-customer-table-filter="reset"]'
+    );
+
+    // Reset datatable
+    resetButton.addEventListener("click", function () {
+      // Reset month
+      filterMonth.val(null).trigger("change");
+
+      // Reset payment type
+      filterPayment[0].checked = true;
+
+      // Reset datatable --- official docs reference: https://datatables.net/reference/api/search()
+      datatable.search("").draw();
+    });
+  };
+
+  // Init toggle toolbar
+  var initToggleToolbar = () => {
+    // Toggle selected action toolbar
+    // Select all checkboxes
+    const checkboxes = table.querySelectorAll('[type="checkbox"]');
+
+    // Select elements
+    const deleteSelected = document.querySelector(
+      '[data-kt-customer-table-select="delete_selected"]'
+    );
+
+    // Toggle delete selected toolbar
+    checkboxes.forEach((c) => {
+      // Checkbox on click event
+      c.addEventListener("click", function () {
+        setTimeout(function () {
+          toggleToolbars();
+        }, 50);
+      });
+    });
+
+    // Deleted selected rows
+    deleteSelected.addEventListener("click", function () {
+      // SweetAlert2 pop up --- official docs reference: https://sweetalert2.github.io/
+      Swal.fire({
+        text: "Are you sure you want to delete selected customers?",
+        icon: "warning",
+        showCancelButton: true,
+        buttonsStyling: false,
+        confirmButtonText: "Yes, delete!",
+        cancelButtonText: "No, cancel",
+        customClass: {
+          confirmButton: "btn fw-bold btn-danger",
+          cancelButton: "btn fw-bold btn-active-light-primary",
+        },
+      }).then(function (result) {
+        if (result.value) {
+          Swal.fire({
+            text: "You have deleted all selected customers!.",
+            icon: "success",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, got it!",
+            customClass: {
+              confirmButton: "btn fw-bold btn-primary",
+            },
+          }).then(function () {
+            // Remove all selected customers
+            checkboxes.forEach((c) => {
+              if (c.checked) {
+                datatable
+                  .row($(c.closest("tbody tr")))
+                  .remove()
+                  .draw();
+              }
+            });
+
+            // Remove header checked box
+            const headerCheckbox =
+              table.querySelectorAll('[type="checkbox"]')[0];
+            headerCheckbox.checked = false;
+          });
+        } else if (result.dismiss === "cancel") {
+          Swal.fire({
+            text: "Selected customers was not deleted.",
+            icon: "error",
+            buttonsStyling: false,
+            confirmButtonText: "Ok, got it!",
+            customClass: {
+              confirmButton: "btn fw-bold btn-primary",
+            },
+          });
+        }
+      });
+    });
+  };
+
+  // Toggle toolbars
+  const toggleToolbars = () => {
+    // Define variables
+    const toolbarBase = document.querySelector(
+      '[data-kt-customer-table-toolbar="base"]'
+    );
+    const toolbarSelected = document.querySelector(
+      '[data-kt-customer-table-toolbar="selected"]'
+    );
+    const selectedCount = document.querySelector(
+      '[data-kt-customer-table-select="selected_count"]'
+    );
+
+    // Select refreshed checkbox DOM elements
+    const allCheckboxes = table.querySelectorAll('tbody [type="checkbox"]');
+
+    // Detect checkboxes state & count
+    let checkedState = false;
+    let count = 0;
+
+    // Count checked boxes
+    allCheckboxes.forEach((c) => {
+      if (c.checked) {
+        checkedState = true;
+        count++;
+      }
+    });
 
     // Toggle toolbars
-    const toggleToolbars = () => {
-        // Define variables
-        const toolbarBase = document.querySelector('[data-kt-customer-table-toolbar="base"]');
-        const toolbarSelected = document.querySelector('[data-kt-customer-table-toolbar="selected"]');
-        const selectedCount = document.querySelector('[data-kt-customer-table-select="selected_count"]');
-
-        // Select refreshed checkbox DOM elements 
-        const allCheckboxes = table.querySelectorAll('tbody [type="checkbox"]');
-
-        // Detect checkboxes state & count
-        let checkedState = false;
-        let count = 0;
-
-        // Count checked boxes
-        allCheckboxes.forEach(c => {
-            if (c.checked) {
-                checkedState = true;
-                count++;
-            }
-        });
-
-        // Toggle toolbars
-        if (checkedState) {
-            selectedCount.innerHTML = count;
-            toolbarBase.classList.add('d-none');
-            toolbarSelected.classList.remove('d-none');
-        } else {
-            toolbarBase.classList.remove('d-none');
-            toolbarSelected.classList.add('d-none');
-        }
+    if (checkedState) {
+      selectedCount.innerHTML = count;
+      toolbarBase.classList.add("d-none");
+      toolbarSelected.classList.remove("d-none");
+    } else {
+      toolbarBase.classList.remove("d-none");
+      toolbarSelected.classList.add("d-none");
     }
+  };
 
-    // Public methods
-    return {
-        init: function () {
-            table = document.querySelector('#kt_customers_table');
+  // Public methods
+  return {
+    init: function () {
+      table = document.querySelector("#kt_customers_table");
 
-            form = document.querySelector('#kt_modal_view_customer_form');
-            submitSignatureButton = form.querySelector('#kt_modal_view_customer_submit');
+      form = document.querySelector("#kt_modal_view_customer_form");
+      submitSignatureButton = form.querySelector(
+        "#kt_modal_view_customer_submit"
+      );
 
-            if (!table) {
-                return;
-            }
+      if (!table) {
+        return;
+      }
 
-            initCustomerList();
-            initToggleToolbar();
-            //handleSearchDatatable();
-            //handleFilterDatatable();
-            handleDeleteRows();
-            //handleResetForm();
-        }
-    }
-}();
+      initCustomerList();
+      initToggleToolbar();
+      //handleSearchDatatable();
+      //handleFilterDatatable();
+      handleDeleteRows();
+      //handleResetForm();
+    },
+  };
+})();
 
 // On document ready
 KTUtil.onDOMContentLoaded(function () {
-    KTCustomersList.init();
+  KTCustomersList.init();
 });
