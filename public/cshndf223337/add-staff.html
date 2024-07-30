@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Staff - Online Staff Promotion Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+     <link rel="stylesheet" href="styles.css">
+    <link rel="shortcut icon" href="favicon.ico">
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-primary text-white text-center py-3">
+        <div class="container">
+            <h1 class="logo">Online Staff Promotion Management System by CS/HND/F22/3337</h1>
+            <nav class="nav justify-content-center">
+                <a class="nav-link text-white" href="dashboard.html">Dashboard</a>
+                <a class="nav-link text-white" href="staff-list.html">Staff</a>
+                <a class="nav-link text-white" href="promotions.html">Promotions</a>
+                <a class="nav-link text-white" href="#" id="logout">Logout</a>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Sidebar and Main Section -->
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+                <div class="sidebar-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link" href="dashboard.html">
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="staff-list.html">
+                                Staff List
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="promotions.html">
+                                Promotions
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="settings.html" style="display: none;">
+                                Settings
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            
+            <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">Add Staff</h1>
+                </div>
+
+                <form id="addStaffForm">
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" class="form-control" id="fullName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="position">Position</label>
+                        <input type="text" class="form-control" id="position" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="promotionStatus">Promotion Status</label>
+                        <input type="text" class="form-control" id="promotionStatus" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Staff</button>
+                </form>
+            </main>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-3">
+        <div class="container">
+            <p>Supervise by: Miss Toye N.T
+            </p>
+        </div>
+    </footer>
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="add-staff.js"></script>
+</body>
+</html>
