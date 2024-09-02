@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
         firebase.firestore().collection('users').doc(user.uid).get().then(function(doc) {
             if (doc.exists) {
                 var userData = doc.data();
-                document.getElementById('welcomeMessage').textContent = 'Welcome, ' + userData.fullName;
+                document.getElementById('welcomeMessage').textContent = 'Welcome, ' + userData.firstName;
             } else {
                 console.log('No such document!');
             }

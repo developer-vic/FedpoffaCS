@@ -58,18 +58,46 @@
                 </div>
 
                 <form id="editStaffForm">
-                    <div class="form-group">
-                        <label for="fullName">Full Name</label>
-                        <input type="text" class="form-control" id="fullName" required>
+                    <img id="passportPreview" src="" alt="Passport Preview" class="ml-3" style="display:none; width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc;">
+      
+                    <div style="display: flex; width: 100%;"> 
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input type="text" class="form-control" id="firstName" required>
+                        </div>
+                        <div class="form-group" style="margin: 0px 30px;">
+                            <label for="middleName">Middle Name</label>
+                            <input type="text" class="form-control" id="middleName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name (Surname)</label>
+                            <input type="text" class="form-control" id="lastName" required>
+                        </div>
                     </div>
+
                     <div class="form-group">
-                        <label for="position">Position</label>
-                        <input type="text" class="form-control" id="position" required>
+                        <label for="staffCategory">Select Staff Category:</label>
+                        <select id="staffCategory" class="form-control" required>
+                            <option value="">--Select Category--</option>
+                            <option value="academic">Academic Staff</option>
+                            <option value="administrative">Administrative Staff</option>
+                            <option value="technical">Technical Staff</option>
+                            <option value="library">Library Staff</option>
+                        </select>
                     </div>
+
                     <div class="form-group">
-                        <label for="promotionStatus">Promotion Status</label>
-                        <input type="text" class="form-control" id="promotionStatus" required>
+                        <label for="staffRank">Select Rank:</label>
+                        <select id="staffRank" class="form-control" required>
+                            <option value="">--Select Rank--</option>
+                        </select>
                     </div>
+ 
+                    <div class="form-group">
+                        <label for="staffEmail">Staff Login Email</label>
+                        <input type="text" class="form-control" id="staffEmail" required readonly>
+                    </div> 
+
                     <button type="submit" class="btn btn-primary">Update Staff</button>
                 </form>
             </main>
@@ -91,6 +119,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
     <script src="firebase-config.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="edit-staff.js"></script>
 </body>
 </html>

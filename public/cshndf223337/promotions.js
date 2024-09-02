@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
+    Swal.fire({
+        title: 'Loading...',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    }); 
+
     var user = null;
     const userMraw = sessionStorage.getItem("current_user_cshndf223337");
     if(userMraw) user = JSON.parse(userMraw);
@@ -14,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }).catch(function(error) {
             console.log('Error getting document:', error);
         });
-        
+         
         // Fetch promotions list
         firebase.firestore().collection('promotions').get().then(function(querySnapshot) {
             var promotionList = document.getElementById('promotionList');
@@ -23,8 +31,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 var row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${promotion.staffName}</td>
-                    <td>${promotion.currentPosition}</td>
-                    <td>${promotion.newPosition}</td>
+                    <td>${promotion.staffRank}</td>
+                    <td>${promotion.staffRankNew}</td>
                     <td>${promotion.promotionDate.toDate().toLocaleDateString()}</td>
                     <td>
                         <button class="btn btn-sm btn-info" onclick="editPromotion('${doc.id}')">Edit</button>
@@ -33,8 +41,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 promotionList.appendChild(row);
             });
+            Swal.close();
         }).catch(function(error) {
-            console.log('Error getting documents:', error);
+            Swal.fire('Error getting documents:', error);
         });
     } else {
         // No user is signed in, redirect to login page
@@ -60,11 +69,18 @@ function editPromotion(promotionId) {
 function deletePromotion(promotionId) {
     // Delete promotion from Firestore
     if (confirm('Are you sure you want to delete this promotion?')) {
+        Swal.fire({
+            title: 'Loading...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        }); 
         firebase.firestore().collection('promotions').doc(promotionId).delete().then(() => {
-            alert('Promotion successfully deleted!');
+            Swal.fire('Promotion successfully deleted!');
             location.reload(); // Refresh the page to update the promotions list
         }).catch((error) => {
-            console.error('Error removing document: ', error);
+            Swal.fire('Error removing document: ', error);
         });
     }
 }

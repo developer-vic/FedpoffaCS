@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
+    Swal.fire({
+        title: 'Loading...',
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
     var user = null;
     const userMraw = sessionStorage.getItem("current_user_cshndf223337");
     if(userMraw) user = JSON.parse(userMraw);
@@ -22,9 +30,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 var staff = doc.data();
                 var row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${staff.name}</td>
-                    <td>${staff.position}</td>
-                    <td>${staff.promotionStatus}</td>
+                    <td>${staff.firstName} ${staff.lastName}</td>
+                    <td>${staff.staffCategory}</td>
+                    <td>${staff.staffRank}</td>
                     <td>
                         <button class="btn btn-sm btn-info" onclick="editStaff('${doc.id}')">Edit</button>
                         <button class="btn btn-sm btn-danger" onclick="deleteStaff('${doc.id}')">Delete</button>
@@ -32,8 +40,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 `;
                 staffList.appendChild(row);
             });
+            Swal.close();
         }).catch(function(error) {
             console.log('Error getting documents:', error);
+            Swal.close();
         });
     } else {
         // No user is signed in, redirect to login page
@@ -59,11 +69,18 @@ function editStaff(staffId) {
 function deleteStaff(staffId) {
     // Delete staff from Firestore
     if (confirm('Are you sure you want to delete this staff?')) {
+        Swal.fire({
+            title: 'Loading...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
         firebase.firestore().collection('staff').doc(staffId).delete().then(() => {
-            alert('Staff successfully deleted!');
+            Swal.fire('Staff successfully deleted!');
             location.reload(); // Refresh the page to update the staff list
         }).catch((error) => {
-            console.error('Error removing document: ', error);
+            Swal.fire('Error removing document: ', error);
         });
     }
 }

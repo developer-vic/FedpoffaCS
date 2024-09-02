@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Information</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .passport-upload {
+            display: inline-block;
+            align-content: center;
+            align-items: center;
+            justify-content: center;
+            width: 150px;
+            height: 150px;
+            border: 2px dashed #007bff;
+            cursor: pointer;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .passport-upload:hover {
+            background-color: #f8f9fa;
+        }
+
+        .passport-upload i {
+            font-size: 2rem;
+            color: #007bff;
+        }
+
+        .passport-upload span {
+            display: block;
+            color: #007bff;
+            margin-top: 10px;
+        }
+
+        #passportInput {
+            display: none;
+        }
+    </style>
+    <link rel="shortcut icon" href="favicon.ico">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2>Staff Information</h2>
+        <div class="form-group">
+            <label for="staffName">Name:</label>
+            <input type="text" id="staffName" class="form-control" readonly>
+        </div>
+        <div class="form-group">
+            <label for="staffEmail">Email:</label>
+            <input type="text" id="staffEmail" class="form-control" readonly>
+        </div>
+        <div class="form-group">
+            <label for="staffCategory">Category:</label>
+            <input type="text" id="staffCategory" class="form-control" readonly>
+        </div>
+        <div class="form-group">
+            <label for="staffRank">Rank:</label>
+            <input type="text" id="staffRank" class="form-control" readonly>
+        </div>
+
+        <h4>Promotion History</h4>
+        <ul id="promotionList" class="list-group mb-4"></ul>
+
+        <div class="d-flex align-items-center">
+            <div class="passport-upload" onclick="document.getElementById('passportInput').click();">
+                <i class="fas fa-plus"></i>
+                <span>Upload Passport</span>
+            </div>
+            <input type="file" id="passportInput" accept="image/*" onchange="uploadPassport()">
+            <img id="passportPreview" src="" alt="Passport Preview" class="ml-3" style="display:none; width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc;">
+        </div>
+
+        <button type="button" onclick="location.href='login.html';" class="btn btn-primary" style="background-color: darkred;">LOG OUT</button>
+         
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-storage.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+        <script src="firebase-config.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="staff-info.js"></script>
+    </div>
+</body>
+
+</html>
