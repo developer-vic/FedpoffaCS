@@ -45,6 +45,16 @@
 <body>
     <div class="container mt-5">
         <h2>Staff Information</h2>
+        
+        <div class="d-flex align-items-center">
+            <div class="passport-upload" onclick="document.getElementById('passportInput').click();">
+                <i class="fas fa-plus"></i>
+                <span>Upload Passport</span>
+            </div>
+            <input type="file" id="passportInput" accept="image/*" onchange="uploadPassport()">
+            <img id="passportPreview" src="" alt="Passport Preview" class="ml-3" style="display:none; width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc;">
+        </div>
+        
         <div class="form-group">
             <label for="staffName">Name:</label>
             <input type="text" id="staffName" class="form-control" readonly>
@@ -65,14 +75,6 @@
         <h4>Promotion History</h4>
         <ul id="promotionList" class="list-group mb-4"></ul>
 
-        <div class="d-flex align-items-center">
-            <div class="passport-upload" onclick="document.getElementById('passportInput').click();">
-                <i class="fas fa-plus"></i>
-                <span>Upload Passport</span>
-            </div>
-            <input type="file" id="passportInput" accept="image/*" onchange="uploadPassport()">
-            <img id="passportPreview" src="" alt="Passport Preview" class="ml-3" style="display:none; width: 150px; height: 150px; object-fit: cover; border: 1px solid #ccc;">
-        </div>
 
         <button type="button" onclick="location.href='login.html';" class="btn btn-primary" style="background-color: darkred;">LOG OUT</button>
          
