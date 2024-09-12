@@ -87,29 +87,25 @@ document.addEventListener('DOMContentLoaded', function () {
             "Head of Department (HOD)",
             "Dean"
         ],
-        administrative: [
+        nonacademic: [
+            "Library Assistant",
+            "Library Officer",
+            "Senior Library Officer",
+            "Principal Library Officer",
+            "Deputy Librarian",
+            "Chief Librarian",
+            "Technician",
+            "Senior Technician",
+            "Principal Technician",
+            "Chief Technician",
+            "Laboratory/Workshop Technologist",
+            "Chief Technologist",
             "Administrative Assistant",
             "Assistant Registrar",
             "Senior Assistant Registrar",
             "Principal Assistant Registrar",
             "Deputy Registrar",
             "Registrar"
-        ],
-        technical: [
-            "Technician",
-            "Senior Technician",
-            "Principal Technician",
-            "Chief Technician",
-            "Laboratory/Workshop Technologist",
-            "Chief Technologist"
-        ],
-        library: [
-            "Library Assistant",
-            "Library Officer",
-            "Senior Library Officer",
-            "Principal Library Officer",
-            "Deputy Librarian",
-            "Chief Librarian"
         ]
     };
 
